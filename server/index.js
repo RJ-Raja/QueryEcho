@@ -4,6 +4,8 @@ import mongoose from 'mongoose';
 import { connectAndFetchSchema, executeSafeQuery } from './services/dbManager.js';
 import { generateSQL } from './services/aiManager.js';
 import dns from 'dns';
+import authRoutes from './routes/authRoutes.js';
+import { verifyToken } from './middleware/authMiddleware.js';
 
 dns.setServers([
   '8.8.8.8',
@@ -15,6 +17,8 @@ const PORT = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
+// Auth Routes
+app.use('/api/auth', authRoutes);
 
 
 mongoose.connect(process.env.MONGO_URI)
@@ -38,25 +42,42 @@ function validateSqlQuery(sqlString) {
 
 
 // --- 4. LIVE QUERY EXECUTION ENDPOINT WITH SECURITY GUARDRAILS ---
-app.post('/api/execute', async (req, res) => {
+app.post('/api/execute', verifyToken, async (req, res) => {
   const { query, engine, dbConfig } = req.body;
+  const userRole = req.user.role; // We get this securely from the JWT token!
 
-  if (!query) {
-    return res.status(400).json({ status: 'error', message: 'No query provided for execution.' });
+  if (!query) return res.status(400).json({ status: 'error', message: 'No query provided.' });
+
+  // --- ROLE-BASED SECURITY GUARDRAILS ---
+  const isReadOnly = userRole === 'Read-Only';
+  const isPowerUser = userRole === 'Power User';
+
+  // Read-Only: Block ALL structural or data modifications
+  const readOnlyBlacklist = /\b(DROP|DELETE|TRUNCATE|ALTER|UPDATE|INSERT|GRANT|REVOKE)\b/i;
+  
+  // Power User: Allow INSERT/UPDATE, but strictly block destructive structural changes
+  const powerUserBlacklist = /\b(DROP|DELETE|TRUNCATE|ALTER|GRANT|REVOKE)\b/i;
+
+  if (isReadOnly && readOnlyBlacklist.test(query)) {
+    return res.status(403).json({ 
+      status: 'security_violation', 
+      message: 'Access Denied: Read-Only users are strictly limited to SELECT queries.' 
+    });
   }
 
-  // 1. Run Security Validation Check
-  const securityCheck = validateSqlQuery(query);
-  if (!securityCheck.isValid) {
-    return res.status(403).json({ status: 'security_violation', message: securityCheck.reason });
+  if (isPowerUser && powerUserBlacklist.test(query)) {
+    return res.status(403).json({ 
+      status: 'security_violation', 
+      message: 'Access Denied: Power Users cannot execute DROP, DELETE, or ALTER statements.' 
+    });
   }
+  // Super Admins bypass the regex checks automatically.
 
-  // 2. Execute Safely using dbManager
+  // --- EXECUTE THE SAFE QUERY ---
   try {
     const rows = await executeSafeQuery(query, dbConfig);
     res.status(200).json({ status: 'success', data: rows });
   } catch (error) {
-    // Catch database-level errors (like syntax errors) and send them back to the UI
     res.status(500).json({ status: 'database_error', message: error.message });
   }
 });
