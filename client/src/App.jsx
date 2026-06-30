@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import Landing from './Landing'; // Adjust to './landing' if your file is lowercase
+import Landing from './landing'; // Adjust to './landing' if your file is lowercase
 import './App.css';
 
 function App() {
