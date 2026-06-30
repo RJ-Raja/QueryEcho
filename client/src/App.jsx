@@ -3,20 +3,23 @@ import Landing from './Landing'; // Adjust to './landing' if your file is lowerc
 import './App.css';
 
 function App() {
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+
+
   const [token, setToken] = useState(localStorage.getItem('token') || '');
   const [userRole, setUserRole] = useState(localStorage.getItem('userRole') || '');
 
   const [dbConfig, setDbConfig] = useState({
     engine: 'postgres', host: 'localhost', port: '5432', user: 'postgres', password: '', database: ''
   });
-  
+
   const [status, setStatus] = useState('Awaiting connection...');
   const [isConnected, setIsConnected] = useState(false);
   const [schemaData, setSchemaData] = useState(null);
-  
+
   const [prompt, setPrompt] = useState('');
   const [generatedSql, setGeneratedSql] = useState('');
-  const [queryExplanation, setQueryExplanation] = useState(''); 
+  const [queryExplanation, setQueryExplanation] = useState('');
   const [aiStatus, setAiStatus] = useState('');
   const [results, setResults] = useState([]);
 
@@ -59,21 +62,21 @@ function App() {
     e.preventDefault();
     setStatus('Connecting and extracting schema...');
     setSchemaData(null);
-    setGeneratedSql(''); 
-    setQueryExplanation(''); 
-    setResults([]); 
+    setGeneratedSql('');
+    setQueryExplanation('');
+    setResults([]);
 
     try {
-      const response = await fetch('http://localhost:5000/api/connect', {
+      const response = await fetch(`${API_BASE_URL}/api/connect`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` 
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify(dbConfig)
       });
       const result = await response.json();
-      
+
       if (response.ok && result.status === 'success') {
         setStatus(`Success! Extracted schema from ${result.data.engine}.`);
         setSchemaData(result.data.schema);
@@ -88,17 +91,17 @@ function App() {
 
   const handleGenerateSQL = async () => {
     if (!prompt || !schemaData) return;
-    
+
     setAiStatus('🧠 AI is thinking...');
     setGeneratedSql('');
-    setQueryExplanation(''); 
+    setQueryExplanation('');
 
     try {
-      const response = await fetch('http://localhost:5000/api/generate', {
+      const response = await fetch(`${API_BASE_URL}/api/generate`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` 
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
           prompt: prompt,
@@ -106,12 +109,12 @@ function App() {
           schema: schemaData
         })
       });
-      
+
       const result = await response.json();
-      
+
       if (response.ok && result.status === 'success') {
-        setGeneratedSql(result.data.query); 
-        setQueryExplanation(result.data.explanation); 
+        setGeneratedSql(result.data.query);
+        setQueryExplanation(result.data.explanation);
         setAiStatus('✅ Query Generated. Please review below.');
       } else {
         setAiStatus(`Error: ${result.message}`);
@@ -126,16 +129,16 @@ function App() {
     setResults([]);
 
     try {
-      const response = await fetch('http://localhost:5000/api/execute', {
+      const response = await fetch(`${API_BASE_URL}/api/execute`, {
         method: 'POST',
-        headers: { 
+        headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}` 
+          'Authorization': `Bearer ${token}`
         },
         body: JSON.stringify({
-          query: generatedSql, 
+          query: generatedSql,
           engine: dbConfig.engine,
-          dbConfig: dbConfig 
+          dbConfig: dbConfig
         })
       });
 
@@ -158,10 +161,10 @@ function App() {
         <Landing onLoginSuccess={handleLoginSuccess} />
       ) : (
         <div style={{ maxWidth: '800px', margin: '40px auto', padding: '20px', backgroundColor: 'rgba(0,0,0,0.6)', borderRadius: '12px', boxShadow: '0 8px 32px rgba(0,0,0,0.3)', color: '#fff' }}>
-          
+
           {/* Header & Logout banner bar */}
           <div style={{ borderBottom: '2px solid rgba(255,255,255,0.2)', paddingBottom: '20px', marginBottom: '25px' }}>
-            
+
             {/* Top Row: Centered Workspace Title */}
             <h2 style={{ margin: '0 0 20px 0', color: '#30cfd0', textAlign: 'center', fontSize: '28px', letterSpacing: '1px' }}>
               QueryEcho Workspace
@@ -176,13 +179,13 @@ function App() {
                 Logout
               </button>
             </div>
-            
+
           </div>
 
           {/* 1. SECURED DATABASE CONNECTION SECTION */}
           <div style={{ border: '1px solid rgba(255,255,255,0.2)', padding: '20px', marginBottom: '20px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)' }}>
             <h3 style={{ marginTop: 0 }}>1. Connect Database</h3>
-            
+
             {!isConnected ? (
               <form onSubmit={testConnection} style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
                 <select name="engine" value={dbConfig.engine} onChange={handleInputChange} style={{ padding: '10px', borderRadius: '6px', border: 'none' }}>
@@ -212,7 +215,7 @@ function App() {
                 </button>
               </div>
             )}
-            
+
             {!isConnected && <p style={{ marginTop: '15px', fontSize: '14px', color: status.includes('Success') ? '#30cfd0' : '#ff6b6b' }}><strong>{status}</strong></p>}
           </div>
 
@@ -220,29 +223,29 @@ function App() {
           {schemaData && (
             <div style={{ border: '1px solid rgba(255,255,255,0.2)', padding: '20px', borderRadius: '8px', background: 'rgba(255,255,255,0.05)' }}>
               <h3 style={{ marginTop: 0 }}>2. Ask the AI</h3>
-              <textarea 
-                placeholder="E.g., Show me all active users who signed up last month..." 
-                value={prompt} 
-                onChange={(e) => setPrompt(e.target.value)} 
+              <textarea
+                placeholder="E.g., Show me all active users who signed up last month..."
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
                 style={{ width: '100%', height: '80px', padding: '12px', marginBottom: '15px', borderRadius: '6px', border: 'none', boxSizing: 'border-box' }}
               />
               <button onClick={handleGenerateSQL} disabled={!prompt} style={{ padding: '12px', backgroundColor: '#330867', color: '#FFF', border: 'none', borderRadius: '6px', cursor: 'pointer', width: '100%', fontWeight: 'bold' }}>
                 Generate SQL
               </button>
-              
+
               <p style={{ marginTop: '15px', fontWeight: 'bold', color: '#30cfd0' }}>{aiStatus}</p>
 
               {generatedSql && (
                 <div style={{ marginTop: '25px', backgroundColor: 'rgba(0,0,0,0.4)', padding: '20px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
                   <h4 style={{ margin: '0 0 15px 0', color: '#ff6b6b' }}>Review & Modify Query (HITL)</h4>
-                  
+
                   {queryExplanation && (
                     <div style={{ padding: '15px', backgroundColor: 'rgba(48, 207, 208, 0.1)', color: '#e0e0e0', borderRadius: '6px', marginBottom: '20px', border: '1px solid rgba(48, 207, 208, 0.3)', fontSize: '14px', lineHeight: '1.6' }}>
                       <strong style={{ color: '#30cfd0' }}>🤖 AI Explanation:</strong> {queryExplanation}
                     </div>
                   )}
 
-                  <textarea 
+                  <textarea
                     value={generatedSql}
                     onChange={(e) => setGeneratedSql(e.target.value)}
                     style={{ width: '100%', height: '120px', fontFamily: 'monospace', padding: '15px', backgroundColor: '#1e1e1e', color: '#30cfd0', border: 'none', borderRadius: '6px', boxSizing: 'border-box' }}
