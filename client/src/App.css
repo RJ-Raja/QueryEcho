@@ -269,3 +269,184 @@ html, body {
   cursor: pointer;
   font-weight: bold;
 }
+
+
+
+/* --- CUSTOM ROLE DROPDOWN MENU --- */
+.custom-select-menu {
+  font-size: 14px;
+  width: 100%;
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.custom-select-menu .item {
+  width: 100%;
+  position: relative;
+}
+
+.custom-select-menu .link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+  background: #fff;
+  color: #757575; /* Gray text to match placeholder style */
+}
+
+
+
+/* Main Box Hover Background (Deep Purple) */
+.custom-select-menu .link::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: #330867; 
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.custom-select-menu .link svg {
+  width: 14px;
+  height: 14px;
+  fill: #757575;
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+
+/* --- CUSTOM ROLE DROPDOWN MENU --- */
+.custom-select-menu {
+  font-size: 14px;
+  width: 100%;
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 10;
+}
+
+.custom-select-menu .item {
+  width: 100%;
+  position: relative;
+}
+
+.custom-select-menu .link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  overflow: hidden;
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+  background: #fff;
+  color: #000000; /* Gray text to match placeholder style */
+}
+
+/* Main Box Hover Background (Deep Purple) */
+.custom-select-menu .link::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: #330867; 
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.custom-select-menu .link svg {
+  width: 14px;
+  height: 14px;
+  fill: #757575;
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+/* Submenu Dropdown Container */
+.custom-select-menu .item .submenu {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 100%;
+  overflow: hidden;
+  border: 1px solid #ccc;
+  border-radius: 0 0 6px 6px;
+  background: #fff;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-10px);
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+  z-index: 20;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+/* Hover triggers for the Main Box */
+.custom-select-menu .item:hover .submenu {
+  opacity: 1; visibility: visible; transform: translateY(0); border-color: #330867;
+}
+
+.custom-select-menu .item:hover .link {
+  color: #ffffff; border-radius: 6px 6px 0 0; border-color: #330867;
+}
+
+.custom-select-menu .item:hover .link::after {
+  transform: scaleX(1); transform-origin: right;
+}
+
+.custom-select-menu .item:hover .link svg {
+  fill: #ffffff; transform: rotate(-180deg);
+}
+
+/* Individual Dropdown Options */
+.submenu-item {
+  width: 100%;
+}
+
+.submenu-link {
+  display: block;
+  padding: 12px;
+  width: 100%;
+  position: relative;
+  text-align: left;
+  transition: all 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+  cursor: pointer;
+  color: #333;
+  box-sizing: border-box;
+}
+
+/* Submenu Hover Background (Teal) */
+.submenu-link::before {
+  content: "";
+  position: absolute;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background-color: #30cfd0; 
+  z-index: -1;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.48s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.submenu-link:hover::before {
+  transform: scaleX(1); transform-origin: right;
+}
+
+.submenu-link:hover {
+  color: #1a1a1a; font-weight: bold;
+}

@@ -4,8 +4,11 @@ import './App.css';
 function Landing({ onLoginSuccess }) {
   const [showModal, setShowModal] = useState(false);
   const [authMode, setAuthMode] = useState('login'); 
+  
+  // Input states
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [role, setRole] = useState('Read-Only'); // <-- ADDED: State to track the selected role
 
   const openAuth = (mode) => {
     setAuthMode(mode);
@@ -20,7 +23,9 @@ function Landing({ onLoginSuccess }) {
     e.preventDefault();
     
     const endpoint = authMode === 'login' ? '/api/auth/login' : '/api/auth/register';
-    const payload = authMode === 'login' ? { username, password } : { username, password, role: 'Read-Only' };
+    
+    // <-- ADDED: Now sends the actually selected role to the backend instead of hardcoding it!
+    const payload = authMode === 'login' ? { username, password } : { username, password, role };
 
     try {
       const response = await fetch(`http://localhost:5000${endpoint}`, {
@@ -117,6 +122,43 @@ function Landing({ onLoginSuccess }) {
                   required 
                 />
               </div>
+
+              {/* <-- The Role Dropdown (Only visible during Registration) --> */}
+              {/* <-- ANIMATED ROLE DROPDOWN --> */}
+              {authMode === 'register' && (
+                <div className="input-group">
+                  <div className="custom-select-menu">
+                    <div className="item">
+                      
+                      {/* The Main Visible Box */}
+                      <div className="link">
+                        <span style={{ color: role === 'Read-Only' ? 'inherit' : '#33b8b8', fontWeight: role !== 'Read-Only' ? 'bold' : 'normal' }}>
+                          Role: {role}
+                        </span>
+                        <svg viewBox="0 0 360 360" xmlSpace="preserve">
+                          <g id="SVGRepo_iconCarrier">
+                            <path d="M325.607,79.393c-5.857-5.857-15.355-5.858-21.213,0.001l-139.39,139.393L25.607,79.393 c-5.857-5.857-15.355-5.858-21.213,0.001c-5.858,5.858-5.858,15.355,0,21.213l150.004,150c2.813,2.813,6.628,4.393,10.606,4.393 s7.794-1.581,10.606-4.394l149.996-150C331.465,94.749,331.465,85.251,325.607,79.393z" />
+                          </g>
+                        </svg>
+                      </div>
+
+                      {/* The Dropdown Options */}
+                      <div className="submenu">
+                        <div className="submenu-item" onClick={() => setRole('Read-Only')}>
+                          <span className="submenu-link">Read-Only</span>
+                        </div>
+                        <div className="submenu-item" onClick={() => setRole('Power User')}>
+                          <span className="submenu-link">Power User</span>
+                        </div>
+                        <div className="submenu-item" onClick={() => setRole('Super Admin')}>
+                          <span className="submenu-link">Super Admin</span>
+                        </div>
+                      </div>
+
+                    </div>
+                  </div>
+                </div>
+              )}
               
               <button type="submit" className="cta-submit">
                 <span className="span-text">{authMode === 'login' ? 'LOGIN' : 'SIGN UP'}</span>
@@ -135,7 +177,6 @@ function Landing({ onLoginSuccess }) {
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google" width="16" />
                 Login with Google
               </button>
-              
               
               <div className="toggle-link">
                 {authMode === 'login' ? (
