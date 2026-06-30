@@ -1,184 +1,271 @@
-.counter {
+/* --- GLOBAL & BACKGROUND --- */
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  min-height: 100vh;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-image: linear-gradient(to top, #30cfd0 0%, #330867 100%);
+  background-attachment: fixed;
+  background-size: cover;
+  color: #fff;
+}
+/* --- OVERRIDE REACT DEFAULTS --- */
+#root {
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100%;
+}
+
+/* Wrapper to give the landing page breathing room */
+.landing-wrapper {
+  padding: 20px 40px; 
+  box-sizing: border-box;
+}
+
+/* --- NAVIGATION BAR --- */
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 40px;
+  background: rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(10px);
+  border-radius: 50px; 
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  position: sticky;
+  top: 20px; 
+  z-index: 100;
+}
+
+.nav-left {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+}
+
+.logo {
+  font-size: 24px;
+  font-weight: bold;
+  letter-spacing: 2px;
+  margin: 0;
+  color: #fff;
+}
+
+.nav-links {
+  display: flex;
+  gap: 25px;
+}
+
+.nav-links a {
+  color: #e0e0e0;
+  text-decoration: none;
   font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
-
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+  transition: color 0.3s;
 }
 
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+.nav-links a:hover {
+  color: #30cfd0;
 }
 
-#center {
+/* --- BUTTONS --- */
+.nav-right button {
+  background: transparent;
+  color: #fff;
+  border: 1px solid #fff;
+  padding: 10px 20px;
+  border-radius: 25px; 
+  margin-left: 15px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: all 0.3s;
+}
+
+.nav-right button.primary-btn {
+  background: #30cfd0;
+  border: none;
+  color: #1a1a1a;
+}
+
+.nav-right button:hover {
+  background: #fff;
+  color: #330867;
+}
+
+/* --- MAIN SECTIONS --- */
+.main-content section {
+  min-height: 80vh;
+  padding: 80px 40px;
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 }
 
-#next-steps {
+.main-content h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+}
+
+.main-content p {
+  font-size: 18px;
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+/* --- FOOTER --- */
+.footer {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 30px 40px;
   display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+  justify-content: space-between;
+  align-items: center;
+  font-size: 14px;
+  border-radius: 12px;
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
+.footer-links a {
+  color: #30cfd0;
+  text-decoration: none;
+  margin-left: 20px;
 }
 
-#next-steps ul {
-  list-style: none;
-  padding: 0;
+/* --- POPUP MODAL --- */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
-  gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
-}
-
-.ticks {
+.modal-box {
+  background: #fff;
+  color: #333;
+  width: 350px;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   position: relative;
+}
+
+.close-btn {
+  position: absolute;
+  top: 15px; right: 15px;
+  background: none; border: none;
+  font-size: 20px; cursor: pointer; color: #888;
+}
+
+.modal-box h2 {
+  margin-top: 0;
+  margin-bottom: 25px;
+  font-size: 24px;
+  color: #330867;
+}
+
+.input-group {
+  margin-bottom: 15px;
+}
+
+.input-group input {
   width: 100%;
+  padding: 12px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
-  }
+/* --- ANIMATED SUBMIT BUTTON --- */
+.cta-submit {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 12px 20px;
+  font-size: 18px;
+  font-weight: bold;
+  color: white;
+  background: #330867; /* QueryEcho Deep Purple */
+  transition: 0.5s;
+  box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
+  transform: skewX(-15deg); /* Skews the main button */
+  border: none;
+  cursor: pointer;
+  margin-bottom: 20px;
+  box-sizing: border-box;
+}
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
-  }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
-  }
+.cta-submit:focus { outline: none; }
+.cta-submit:hover { box-shadow: 8px 8px 0 #30cfd0; /* QueryEcho Teal */ }
+
+/* CRITICAL FIX: Inline elements ignore transforms. We must make it inline-block to un-skew the text! */
+.cta-submit .span-text {
+  display: inline-block; 
+  transform: skewX(15deg); /* Un-skews the text so it is readable */
+}
+
+/* CRITICAL FIX: We must un-skew the arrows too so they don't look stretched! */
+.cta-submit .second {
+  display: flex;
+  align-items: center;
+  width: 30px;
+  margin-left: 15px;
+  position: relative;
+  transition: 0.5s;
+  transform: skewX(15deg); /* Un-skews the arrows */
+}
+
+/* Base color for arrows */
+.cta-submit path {
+  fill: #ffffff;
+}
+
+/* Hover Animations */
+.cta-submit:hover .second { margin-right: 25px; }
+
+.cta-submit .one { transition: 0.4s; transform: translateX(-60%); }
+.cta-submit .two { transition: 0.5s; transform: translateX(-30%); }
+
+.cta-submit:hover .three { animation: color_anim 1s infinite 0.2s; }
+.cta-submit:hover .one { transform: translateX(0%); animation: color_anim 1s infinite 0.6s; }
+.cta-submit:hover .two { transform: translateX(0%); animation: color_anim 1s infinite 0.4s; }
+
+/* Arrow color animation to QueryEcho Teal */
+@keyframes color_anim {
+  0% { fill: white; }
+  50% { fill: #30cfd0; } 
+  100% { fill: white; }
+}
+
+.google-btn {
+  width: 100%;
+  padding: 12px;
+  background: #fff;
+  color: #444;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.toggle-link {
+  text-align: center;
+  font-size: 14px;
+  color: #666;
+}
+
+.toggle-link span {
+  color: #30cfd0;
+  cursor: pointer;
+  font-weight: bold;
 }
