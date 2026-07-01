@@ -86,7 +86,8 @@ app.post('/api/execute', verifyToken, async (req, res) => {
 // Middleware
 // We restrict CORS to your Vite frontend's default port (5173) for security
 app.use(cors({
-    origin: 'http://localhost:5173' 
+    origin: ["http://localhost:5173", "https://queryecho.vercel.app"],
+    credentials: true
 }));
 
 // Allows our server to accept JSON data in request bodies
